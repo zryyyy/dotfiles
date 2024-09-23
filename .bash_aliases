@@ -22,6 +22,10 @@ alias gl="git log"
 alias glg="git log --all --graph --decorate --abbrev-commit --pretty=online"
 alias gaa="git add ."
 alias gcm="git commit -m"
+gac() {
+  git add .
+  git commit -m "$1"
+}
 gcp() {
   git commit -m "$1"
   git push
