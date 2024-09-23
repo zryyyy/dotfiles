@@ -1,0 +1,26 @@
+# Lazy-load NVM
+lazy_nvm() {
+  unset -f nvm node npm npx
+
+  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "$HOME/.nvm" || printf %s "$XDG_CONFIG_HOME/nvm")"
+
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+  # Ensure nvm, node, npm and npx are available once nvm is loaded
+  nvm "$@"
+}
+
+# Create function placeholders to lazy-load NVM
+nvm() {
+  lazy_nvm "$@"
+}
+node() {
+  lazy_nvm "exec" "node" "$@"
+}
+npm() {
+  lazy_nvm "exec" "npm" "$@"
+}
+npx() {
+  lazy_nvm "exec" "npx" "$@"
+}
