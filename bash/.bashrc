@@ -1,5 +1,5 @@
 if [ -f ~/.dotfiles/shell/.aliases ]; then
-  source ~/.dotfiles/shell/.aliases
+    source ~/.dotfiles/shell/.aliases
 fi
 
 eval "$(starship init bash)"
