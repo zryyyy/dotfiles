@@ -1,5 +1,6 @@
 # command
 alias c="clear"
+alias sz="source ~/.zshrc"
 alias sb="source ~/.bashrc"
 
 # navigation
@@ -19,7 +20,7 @@ alias gd="git diff"
 alias gp="git push"
 alias gm="git commit -m"
 alias gl="git log"
-alias glg="git log --all --graph --decorate --abbrev-commit --pretty=online"
+alias glg="git log --all --graph --decorate --abbrev-commit --pretty=oneline"
 alias gaa="git add ."
 alias gcm="git commit -m"
 gac() {
@@ -45,6 +46,9 @@ alias nrb="npm run build"
 alias nrp="npm run preview"
 alias nrt="npm run test"
 alias nrl="npm run lint"
+
+# brew
+alias up="brew update && brew upgrade && brew cleanup"
 
 # other
 # Get week number

@@ -1,0 +1,26 @@
+font-size = 16
+font-family = "SFMono Nerd Font"
+# font-thicken = true # mac
+
+theme = light:Ayu Light,dark:Ayu
+
+window-padding-x = 10
+window-padding-y = 10
+window-padding-balance = true
+window-padding-color = extend
+
+background-opacity = 0.70
+background-blur = true
+background-opacity-cells = true
+selection-foreground = cell-foreground
+selection-background = #b4d8fd
+
+adjust-cursor-thickness = 3
+cursor-style = bar
+cursor-click-to-move = false
+cursor-opacity = 0.8
+mouse-hide-while-typing = true
+
+macos-titlebar-style = tabs
+quit-after-last-window-closed = true
+# macos-titlebar-style = hidden

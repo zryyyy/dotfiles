@@ -7,3 +7,4 @@ My personal dotfiles and configs
 - [soerenmartius/awesome-dotfiles](https://github.com/soerenmartius/awesome-dotfiles)
 - [hendrikmi/dotfiles](https://github.com/hendrikmi/dotfiles)
 - [mattmc3/zephyr](https://github.com/mattmc3/zephyr)
+- [ANRlm/dotfiles](https://github.com/ANRlm/dotfiles)
