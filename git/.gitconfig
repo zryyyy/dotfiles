@@ -1,3 +1,13 @@
 [user]
 	name = zryyyy
 	email = 37234999+zryyyy@users.noreply.github.com
+
+[core]
+    autocrlf = input
+    eol = lf
+
+# [includeIf "hasconfig:remote.*.url:**gitlab.com/**"]
+#     path = ~/.dotfiles/git/.gitconfig-gitlab
+
+[includeIf "hasconfig:os|sysname:Windows"]
+    path = ~/.dotfiles/git/.gitconfig-windows
