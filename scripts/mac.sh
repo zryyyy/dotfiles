@@ -26,7 +26,7 @@ trap 'die "Error on line $LINENO"' ERR
 # ──────────────────────────────────────────────────
 section "SSH"
 
-SSH_OUTPUT=$(ssh -T git@github.com 2>&1 || true)
+SSH_OUTPUT=$(ssh -T -o StrictHostKeyChecking=accept-new git@github.com 2>&1 || true)
 
 if echo "$SSH_OUTPUT" | grep -q "successfully authenticated"; then
     info "GitHub SSH connection is already configured and working, skipping SSH setup"
@@ -35,7 +35,7 @@ else
 
     # Generate key
     if [[ -f "$HOME/.ssh/id_ed25519" ]]; then
-        info "SSH key already exists, skipping"
+        info "SSH key already exists, skipping generation"
     else
         ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
         info "SSH key generated"
@@ -73,7 +73,10 @@ else
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     if [[ -f /opt/homebrew/bin/brew ]]; then
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        BREW_ENV_CMD='eval "$(/opt/homebrew/bin/brew shellenv)"'
+        if ! grep -qF "$BREW_ENV_CMD" ~/.zprofile 2>/dev/null; then
+            echo "$BREW_ENV_CMD" >> ~/.zprofile
+        fi
         eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
 
@@ -120,3 +123,13 @@ RESTORE_SCRIPT="$DOTFILES_DIR/scripts/restore.sh"
 [[ -f "$RESTORE_SCRIPT" ]] || die "restore.sh not found at $RESTORE_SCRIPT"
 
 bash "$RESTORE_SCRIPT"
+
+# ──────────────────────────────────────────────────
+# Brew bundle
+# ──────────────────────────────────────────────────
+section "Brew bundle"
+
+brew bundle --file="$DOTFILES_DIR/packages/Brewfile"
+
+# ──────────────────────────────────────────────────
+info "All done!"

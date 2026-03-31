@@ -61,16 +61,28 @@ for dir in ghostty helix; do
     link_dir "$DOTFILES_DIR/$dir" "$CONFIG_DIR/$dir"
 done
 
-for file in "bash/.bashrc" "zsh/.zshrc" "git/.gitconfig"; do
+for file in "zsh/.zshrc" "git/.gitconfig"; do
     filename=$(basename "$file")
     link_file "$DOTFILES_DIR/$file" "$HOME/$filename"
 done
 
 link_file "$DOTFILES_DIR/starship/starship.toml" "$CONFIG_DIR/starship.toml"
 
-# ──────────────────────────────────────────────────
-# Brew bundle
-# ──────────────────────────────────────────────────
-section "Brew bundle"
+# bash
+bashrc_src="$DOTFILES_DIR/bash/.bashrc"
+bashrc_dst="$HOME/.bashrc"
+source_cmd="source \"$bashrc_src\""
 
-brew bundle --file="$DOTFILES_DIR/Brewfile"
+if [[ "$bashrc_dst" -ef "$bashrc_src" ]]; then
+    info "Already linked $bashrc_dst → $bashrc_src"
+elif [[ ! -e "$bashrc_dst" ]]; then
+    link_file "$bashrc_src" "$bashrc_dst"
+else
+    if grep -Fq "$source_cmd" "$bashrc_dst"; then
+        info "Already sourced in $bashrc_dst"
+    else
+        echo -e "\n# Load custom dotfiles bashrc" >> "$bashrc_dst"
+        echo "$source_cmd" >> "$bashrc_dst"
+        info "Appended source command to $bashrc_dst"
+    fi
+fi

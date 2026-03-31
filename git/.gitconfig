@@ -5,6 +5,7 @@
 [core]
     autocrlf = input
     eol = lf
+    whitespace = blank-at-eol,blank-at-eof,space-before-tab
 
 # [includeIf "hasconfig:remote.*.url:**gitlab.com/**"]
 #     path = ~/.dotfiles/git/.gitconfig-gitlab
