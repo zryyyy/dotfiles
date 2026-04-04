@@ -24,7 +24,10 @@ function die($msg) { Write-Host "[✗] $msg" -ForegroundColor Red; exit 1 }
 section "Winget Update"
 
 info "Updating winget package sources..."
+$ErrorActionPreference = "Continue"
 winget source update
+$ErrorActionPreference = "Stop"
+if ($LASTEXITCODE -ne 0) { warn "winget source update encountered some errors, continuing..." }
 
 # ──────────────────────────────────────────────────
 # SSH
@@ -120,8 +123,12 @@ if (-Not (Get-Command bash -ErrorAction SilentlyContinue)) {
     }
 }
 
-$env:MSYS = "winsymlinks:nativestrict"
-& $bashExe "$DOTFILES_DIR\scripts\restore.sh"
+if (Get-Command $bashExe -ErrorAction SilentlyContinue) {
+    $env:MSYS = "winsymlinks:nativestrict"
+    & $bashExe "$DOTFILES_DIR\scripts\restore.sh"
+} else {
+    warn "Bash executable is not available. Skipping execution of restore.sh."
+}
 
 # helix
 $helixConfig = "$HOME\.dotfiles\helix"

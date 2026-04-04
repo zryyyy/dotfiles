@@ -35,8 +35,8 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 section "System Update"
 
 info "Updating and upgrading APT packages..."
-sudo apt-get update
-sudo apt-get upgrade -y
+sudo apt-get update || warn "apt-get update encountered some errors..."
+sudo apt-get upgrade -y || warn "apt-get upgrade encountered some errors..."
 sudo apt-get autoremove -y
 
 info "Installing base utilities"
@@ -190,7 +190,7 @@ if ! grep -q "^deb .*gierens.de" /etc/apt/sources.list /etc/apt/sources.list.d/*
     wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor --yes -o /etc/apt/keyrings/gierens.gpg
     echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
     sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
-    sudo apt-get update
+    sudo apt-get update || warn "apt-get update encountered some errors..."
     sudo apt install -y eza
 fi
 
@@ -198,7 +198,7 @@ fi
 if ! grep -q "^deb .*maveonair/helix-editor" /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null; then
     info "Adding helix PPA..."
     sudo add-apt-repository ppa:maveonair/helix-editor -y
-    sudo apt-get update
+    sudo apt-get update || warn "apt-get update encountered some errors..."
     sudo apt-get install -y helix
 fi
 

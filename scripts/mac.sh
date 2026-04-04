@@ -83,9 +83,9 @@ else
     info "Homebrew installed"
 fi
 
-brew update
-brew upgrade
-brew cleanup
+brew update || warn "brew update encountered some errors..."
+brew upgrade || warn "brew upgrade encountered some errors..."
+brew cleanup || warn "brew cleanup encountered some errors..."
 
 # ──────────────────────────────────────────────────
 # Git
@@ -129,7 +129,7 @@ bash "$RESTORE_SCRIPT"
 # ──────────────────────────────────────────────────
 section "Brew bundle"
 
-brew bundle --file="$DOTFILES_DIR/packages/Brewfile"
+brew bundle --file="$DOTFILES_DIR/packages/Brewfile" || warn "Some packages failed to install via brew bundle, check manually."
 
 # ──────────────────────────────────────────────────
 info "All done!"
