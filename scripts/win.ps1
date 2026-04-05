@@ -113,21 +113,39 @@ if (Test-Path $DOTFILES_DIR) {
 # ──────────────────────────────────────────────────
 section "Restore"
 
-$bashExe = "bash"
-if (-Not (Get-Command bash -ErrorAction SilentlyContinue)) {
-    $gitBashPath = "C:\Program Files\Git\bin\bash.exe"
-    if (Test-Path $gitBashPath) {
-        $bashExe = $gitBashPath
-    } else {
-        warn "Could not find bash.exe. The restore script might fail."
+# Try to find the default installation path of Git Bash
+$gitBashPath = "C:\Program Files\Git\bin\bash.exe"
+$bashExe = $null
+
+if (Test-Path $gitBashPath) {
+    $bashExe = $gitBashPath
+} else {
+    # If the default path is not found, try to infer the Git Bash path from the git command location
+    $gitCmd = Get-Command git -ErrorAction SilentlyContinue
+    if ($gitCmd) {
+        # git.exe is usually located at <Git_Install_Dir>\cmd\git.exe
+        $gitDir = Split-Path (Split-Path $gitCmd.Path)
+        $inferredBashPath = Join-Path $gitDir "bin\bash.exe"
+        if (Test-Path $inferredBashPath) {
+            $bashExe = $inferredBashPath
+        }
     }
 }
 
-if (Get-Command $bashExe -ErrorAction SilentlyContinue) {
+if ($bashExe) {
+    info "Using Git Bash at $bashExe"
+
+    # Enable MSYS native symlink support
     $env:MSYS = "winsymlinks:nativestrict"
-    & $bashExe "$DOTFILES_DIR\scripts\restore.sh"
+
+    # Convert backslashes to forward slashes to ensure compatibility with Git Bash
+    $restoreScriptPath = "$DOTFILES_DIR\scripts\restore.sh" -replace '\\', '/'
+
+    # Execute the restore script
+    & $bashExe $restoreScriptPath
 } else {
-    warn "Bash executable is not available. Skipping execution of restore.sh."
+    warn "Could not find Git Bash. Skipping execution of restore.sh."
+    warn "Please ensure Git for Windows is properly installed."
 }
 
 # helix
