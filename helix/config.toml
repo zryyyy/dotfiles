@@ -1,1 +1,5 @@
 theme = "catppuccin_frappe"
+
+[editor]
+bufferline = "multiple"
+cursorline = true

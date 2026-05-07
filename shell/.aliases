@@ -48,6 +48,14 @@ alias nrt="npm run test"
 alias nrl="npm run lint"
 
 # brew
+alias bi='brew install'
+alias bic='brew install --cask'
+alias brm='brew uninstall'
+alias brmc='brew uninstall --cask'
+alias bs='brew search'
+alias binf='brew info'
+alias bl='brew list'
+alias blc='brew list --cask'
 alias up="brew update && brew upgrade && brew cleanup"
 
 # other

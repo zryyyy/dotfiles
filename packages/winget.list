@@ -1,6 +1,8 @@
 # winget
+ajeetdsouza.zoxide
 ArminOsaj.AutoDarkMode
 astral-sh.uv
+BurntSushi.ripgrep.MSVC
 Canonical.Ubuntu
 Devolutions.UniGetUI
 eza-community.eza
@@ -18,6 +20,7 @@ JetBrains.GoLand
 JetBrains.PyCharm
 JetBrains.WebStorm
 JohnMacFarlane.Pandoc
+junegunn.fzf
 LenovoLegionToolkitTeam.LenovoLegionToolkit
 liule.Snipaste
 LocalSend.LocalSend
@@ -29,9 +32,12 @@ Microsoft.WindowsTerminal
 Microsoft.WSL
 QL-Win.QuickLook
 Schniz.fnm
+sharkdp.bat
+sharkdp.fd
 sharkdp.hyperfine
 SoftDeluxe.FreeDownloadManager
 Starship.Starship
+sxyazi.yazi
 voidtools.Everything
 ZedIndustries.Zed
 

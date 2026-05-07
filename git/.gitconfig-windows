@@ -1,2 +1,5 @@
 [core]
     fileMode = false
+
+[credential]
+    helper = manager
