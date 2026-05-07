@@ -86,3 +86,34 @@ else
         info "Appended source command to $bashrc_dst"
     fi
 fi
+
+# ──────────────────────────────────────────────────
+# OS-Specific Gitconfig
+# ──────────────────────────────────────────────────
+section "OS-Specific Gitconfig"
+
+OS_NAME="unknown"
+case "$(uname -s)" in
+    Darwin*)
+        OS_NAME="mac"
+        ;;
+    Linux*)
+        if grep -qi microsoft /proc/version 2>/dev/null; then
+            OS_NAME="wsl"
+        else
+            OS_NAME="linux"
+        fi
+        ;;
+    CYGWIN*|MINGW*|MSYS*)
+        OS_NAME="windows"
+        ;;
+esac
+
+GITCONFIG_OS_SRC="$DOTFILES_DIR/git/.gitconfig-$OS_NAME"
+GITCONFIG_LOCAL_DST="$DOTFILES_DIR/git/.gitconfig-local"
+
+if [[ -f "$GITCONFIG_OS_SRC" ]]; then
+    link_file "$GITCONFIG_OS_SRC" "$GITCONFIG_LOCAL_DST"
+else
+    info "No specific gitconfig found for OS: $OS_NAME (Skipping)"
+fi
