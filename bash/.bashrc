@@ -1,3 +1,6 @@
+export HISTCONTROL=ignoredups
+export HISTIGNORE="history*:fc*:exit"
+
 if [ -f ~/.dotfiles/shell/.aliases ]; then
     source ~/.dotfiles/shell/.aliases
 fi
