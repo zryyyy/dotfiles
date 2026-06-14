@@ -34,12 +34,14 @@ if ($LASTEXITCODE -ne 0) { warn "winget source update encountered some errors, c
 # ──────────────────────────────────────────────────
 section "SSH"
 
+$sshAvailable = $false
 $ErrorActionPreference = "Continue"
 $sshOutput = ssh -T -o StrictHostKeyChecking=accept-new git@github.com 2>&1
 $ErrorActionPreference = "Stop"
 $sshOutputStr = $sshOutput -join " "
 
 if ($sshOutputStr -match "successfully authenticated") {
+    $sshAvailable = $true
     info "GitHub SSH connection is already configured and working, skipping SSH setup"
 } else {
     warn "GitHub SSH is not yet configured, starting setup..."
@@ -72,9 +74,11 @@ if ($sshOutputStr -match "successfully authenticated") {
     $sshOutputStr = $sshOutput -join " "
 
     if ($sshOutputStr -match "successfully authenticated") {
+        $sshAvailable = $true
         info "SSH connection successful!"
     } else {
-        die "SSH connection failed: $sshOutputStr"
+        warn "SSH connection failed: $sshOutputStr"
+        warn "Continuing with HTTPS origin"
     }
 }
 
@@ -100,11 +104,19 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 section "Dotfiles"
 
 $DOTFILES_DIR = "$HOME\.dotfiles"
+$HTTPS_REPO_URL = "https://github.com/zryyyy/dotfiles.git"
+$SSH_REPO_URL = "git@github.com:zryyyy/dotfiles.git"
 
 if (Test-Path $DOTFILES_DIR) {
     info "Dotfiles already exist at $DOTFILES_DIR, skipping"
 } else {
-    git clone git@github.com:zryyyy/dotfiles.git $DOTFILES_DIR
+    git clone $HTTPS_REPO_URL $DOTFILES_DIR
+    if ($LASTEXITCODE -ne 0) { die "Failed to clone dotfiles from $HTTPS_REPO_URL" }
+    if ($sshAvailable) {
+        git -C $DOTFILES_DIR remote set-url origin $SSH_REPO_URL
+        if ($LASTEXITCODE -ne 0) { die "Failed to update dotfiles origin to SSH" }
+        info "Updated dotfiles origin to SSH"
+    }
     info "Cloned dotfiles to $DOTFILES_DIR"
 }
 

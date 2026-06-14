@@ -26,9 +26,11 @@ trap 'die "Error on line $LINENO"' ERR
 # ──────────────────────────────────────────────────
 section "SSH"
 
+SSH_AVAILABLE=false
 SSH_OUTPUT=$(ssh -T -o StrictHostKeyChecking=accept-new git@github.com 2>&1 || true)
 
 if echo "$SSH_OUTPUT" | grep -q "successfully authenticated"; then
+    SSH_AVAILABLE=true
     info "GitHub SSH connection is already configured and working, skipping SSH setup"
 else
     warn "GitHub SSH is not yet configured, starting setup..."
@@ -55,9 +57,11 @@ else
     SSH_OUTPUT=$(ssh -T git@github.com 2>&1 || true)
 
     if echo "$SSH_OUTPUT" | grep -q "successfully authenticated"; then
+        SSH_AVAILABLE=true
         info "SSH connection successful!"
     else
-        die "SSH connection failed: $SSH_OUTPUT"
+        warn "SSH connection failed: $SSH_OUTPUT"
+        warn "Continuing with HTTPS origin"
     fi
 fi
 
@@ -105,11 +109,17 @@ fi
 section "Dotfiles"
 
 DOTFILES_DIR="$HOME/.dotfiles"
+HTTPS_REPO_URL="https://github.com/zryyyy/dotfiles.git"
+SSH_REPO_URL="git@github.com:zryyyy/dotfiles.git"
 
 if [[ -d "$DOTFILES_DIR" ]]; then
     info "Dotfiles already exist at $DOTFILES_DIR, skipping"
 else
-    git clone git@github.com:zryyyy/dotfiles.git "$DOTFILES_DIR"
+    git clone "$HTTPS_REPO_URL" "$DOTFILES_DIR"
+    if [[ "$SSH_AVAILABLE" == true ]]; then
+        git -C "$DOTFILES_DIR" remote set-url origin "$SSH_REPO_URL"
+        info "Updated dotfiles origin to SSH"
+    fi
     info "Cloned dotfiles to $DOTFILES_DIR"
 fi
 
