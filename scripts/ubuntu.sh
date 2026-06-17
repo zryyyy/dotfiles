@@ -40,7 +40,7 @@ sudo apt-get upgrade -y || warn "apt-get upgrade encountered some errors..."
 sudo apt-get autoremove -y
 
 info "Installing base utilities"
-sudo apt-get install -y curl wget gpg software-properties-common
+sudo apt-get install -y curl wget gpg software-properties-common unzip
 
 # ──────────────────────────────────────────────────
 # SSH
@@ -118,6 +118,7 @@ SSH_REPO_URL="git@github.com:zryyyy/dotfiles.git"
 
 if [[ -d "$DOTFILES_DIR" ]]; then
     info "Dotfiles already exist at $DOTFILES_DIR, skipping"
+    git -C "$DOTFILES_DIR" pull || warn "Failed to pull latest dotfiles, continuing with existing..."
 else
     git clone "$HTTPS_REPO_URL" "$DOTFILES_DIR"
     if [[ "$SSH_AVAILABLE" == true ]]; then
@@ -189,36 +190,14 @@ else
 fi
 
 # ──────────────────────────────────────────────────
-# Add Third-Party Repositories
-# ──────────────────────────────────────────────────
-section "Third-Party Repos"
-
-# eza
-if ! grep -q "^deb .*gierens.de" /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null; then
-    info "Adding eza repository..."
-    sudo mkdir -p /etc/apt/keyrings
-    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor --yes -o /etc/apt/keyrings/gierens.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
-    sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
-    sudo apt-get update || warn "apt-get update encountered some errors..."
-    sudo apt install -y eza
-fi
-
-# helix
-if ! grep -q "^deb .*maveonair/helix-editor" /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null; then
-    info "Adding helix PPA..."
-    sudo add-apt-repository ppa:maveonair/helix-editor -y
-    sudo apt-get update || warn "apt-get update encountered some errors..."
-    sudo apt-get install -y helix
-fi
-
-# ──────────────────────────────────────────────────
 # Manual Installs
 # ──────────────────────────────────────────────────
 section "Manual Installs"
 
 # fnm
-curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell --install-dir "$HOME/.local/share/fnm"
+mkdir -p "$HOME/.local/bin"
+ln -sf "$HOME/.local/share/fnm/fnm" "$HOME/.local/bin/fnm"
 # starship
 curl -sS https://starship.rs/install.sh | sh -s -- -y
 # uv

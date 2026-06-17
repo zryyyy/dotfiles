@@ -35,6 +35,7 @@ Windows = ' '
 Macos = ' '
 Linux = ' '
 Ubuntu = ''
+Fedora = '󰮤'
 
 [directory]
 style = 'bold fg:dark_blue'

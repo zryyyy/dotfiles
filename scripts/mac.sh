@@ -114,6 +114,7 @@ SSH_REPO_URL="git@github.com:zryyyy/dotfiles.git"
 
 if [[ -d "$DOTFILES_DIR" ]]; then
     info "Dotfiles already exist at $DOTFILES_DIR, skipping"
+    git -C "$DOTFILES_DIR" pull || warn "Failed to pull latest dotfiles, continuing with existing..."
 else
     git clone "$HTTPS_REPO_URL" "$DOTFILES_DIR"
     if [[ "$SSH_AVAILABLE" == true ]]; then

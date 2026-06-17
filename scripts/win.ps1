@@ -108,8 +108,13 @@ $HTTPS_REPO_URL = "https://github.com/zryyyy/dotfiles.git"
 $SSH_REPO_URL = "git@github.com:zryyyy/dotfiles.git"
 
 if (Test-Path $DOTFILES_DIR) {
-    info "Dotfiles already exist at $DOTFILES_DIR, skipping"
+    info "Dotfiles already exist at $DOTFILES_DIR, pulling latest changes..."
+    $ErrorActionPreference = "Continue"
+    git -C $DOTFILES_DIR pull
+    if ($LASTEXITCODE -ne 0) { warn "Failed to pull latest dotfiles, continuing with existing..." }
+    $ErrorActionPreference = "Stop"
 } else {
+    info "Cloning dotfiles..."
     git clone $HTTPS_REPO_URL $DOTFILES_DIR
     if ($LASTEXITCODE -ne 0) { die "Failed to clone dotfiles from $HTTPS_REPO_URL" }
     if ($sshAvailable) {

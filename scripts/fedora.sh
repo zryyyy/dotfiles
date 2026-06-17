@@ -39,7 +39,7 @@ sudo dnf upgrade --refresh -y || warn "dnf upgrade encountered some errors..."
 sudo dnf autoremove -y
 
 info "Installing base utilities"
-sudo dnf install -y curl wget gnupg2 openssh-clients
+sudo dnf install -y curl wget gnupg2 openssh-clients gawk
 
 # ──────────────────────────────────────────────────
 # SSH
@@ -117,6 +117,7 @@ SSH_REPO_URL="git@github.com:zryyyy/dotfiles.git"
 
 if [[ -d "$DOTFILES_DIR" ]]; then
     info "Dotfiles already exist at $DOTFILES_DIR, skipping"
+    git -C "$DOTFILES_DIR" pull || warn "Failed to pull latest dotfiles, continuing with existing..."
 else
     git clone "$HTTPS_REPO_URL" "$DOTFILES_DIR"
     if [[ "$SSH_AVAILABLE" == true ]]; then
@@ -167,7 +168,9 @@ fi
 section "Manual Installs"
 
 # fnm
-curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell --install-dir "$HOME/.local/share/fnm"
+mkdir -p "$HOME/.local/bin"
+ln -sf "$HOME/.local/share/fnm/fnm" "$HOME/.local/bin/fnm"
 # starship
 curl -sS https://starship.rs/install.sh | sh -s -- -y
 
