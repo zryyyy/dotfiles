@@ -30,17 +30,16 @@ sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # ──────────────────────────────────────────────────
-# APT System Update
+# DNF System Update
 # ──────────────────────────────────────────────────
 section "System Update"
 
-info "Updating and upgrading APT packages..."
-sudo apt-get update || warn "apt-get update encountered some errors..."
-sudo apt-get upgrade -y || warn "apt-get upgrade encountered some errors..."
-sudo apt-get autoremove -y
+info "Updating and upgrading DNF packages..."
+sudo dnf upgrade --refresh -y || warn "dnf upgrade encountered some errors..."
+sudo dnf autoremove -y
 
 info "Installing base utilities"
-sudo apt-get install -y curl wget gpg software-properties-common
+sudo dnf install -y curl wget gnupg2 openssh-clients
 
 # ──────────────────────────────────────────────────
 # SSH
@@ -103,7 +102,7 @@ if command -v git &>/dev/null; then
     info "git already installed ($(git --version)), skipping"
 else
     info "Installing git..."
-    sudo apt-get install -y git
+    sudo dnf install -y git
     info "git installed"
 fi
 
@@ -139,77 +138,27 @@ RESTORE_SCRIPT="$DOTFILES_DIR/scripts/restore.sh"
 bash "$RESTORE_SCRIPT"
 
 # ──────────────────────────────────────────────────
-# APT Package Installation
+# DNF Package Installation
 # ──────────────────────────────────────────────────
-section "APT Packages"
+section "DNF Packages"
 
-APT_LIST="$DOTFILES_DIR/packages/apt.list"
+DNF_LIST="$DOTFILES_DIR/packages/dnf.list"
 
-if [[ -f "$APT_LIST" ]]; then
-    info "Reading packages from $APT_LIST..."
+if [[ -f "$DNF_LIST" ]]; then
+    info "Reading packages from $DNF_LIST..."
 
     # Extract package names from non-comment, non-empty lines
-    mapfile -t PKG_ARRAY < <(awk '/^[^#]/{print $1}' "$APT_LIST")
+    mapfile -t PKG_ARRAY < <(awk '/^[^#]/{print $1}' "$DNF_LIST")
 
     if [[ ${#PKG_ARRAY[@]} -gt 0 ]]; then
         info "Installing packages..."
-        sudo apt-get install -y "${PKG_ARRAY[@]}"
+        sudo dnf install -y --skip-broken --skip-unavailable "${PKG_ARRAY[@]}"
         info "Packages installed successfully"
-
-        # fd-find -> fd
-        if printf '%s\n' "${PKG_ARRAY[@]}" | grep -qxw "fd-find"; then
-            info "Setting up symlink for fd-find..."
-            mkdir -p ~/.local/bin
-
-            if command -v fdfind >/dev/null 2>&1; then
-                ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
-                info "Symlink 'fd' created in ~/.local/bin/"
-            else
-                warn "fdfind binary not found, skipping symlink"
-            fi
-        fi
-
-        # batcat -> bat
-        if printf '%s\n' "${PKG_ARRAY[@]}" | grep -qxw "bat"; then
-            info "Setting up symlink for batcat..."
-            mkdir -p ~/.local/bin
-
-            if command -v batcat >/dev/null 2>&1; then
-                ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
-                info "Symlink 'bat' created in ~/.local/bin/"
-            else
-                warn "batcat binary not found, skipping symlink"
-            fi
-        fi
     else
-        warn "No packages found in $APT_LIST"
+        warn "No packages found in $DNF_LIST"
     fi
 else
-    warn "apt.list not found at $APT_LIST, skipping package installation"
-fi
-
-# ──────────────────────────────────────────────────
-# Add Third-Party Repositories
-# ──────────────────────────────────────────────────
-section "Third-Party Repos"
-
-# eza
-if ! grep -q "^deb .*gierens.de" /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null; then
-    info "Adding eza repository..."
-    sudo mkdir -p /etc/apt/keyrings
-    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor --yes -o /etc/apt/keyrings/gierens.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
-    sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
-    sudo apt-get update || warn "apt-get update encountered some errors..."
-    sudo apt install -y eza
-fi
-
-# helix
-if ! grep -q "^deb .*maveonair/helix-editor" /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null; then
-    info "Adding helix PPA..."
-    sudo add-apt-repository ppa:maveonair/helix-editor -y
-    sudo apt-get update || warn "apt-get update encountered some errors..."
-    sudo apt-get install -y helix
+    warn "dnf.list not found at $DNF_LIST, skipping package installation"
 fi
 
 # ──────────────────────────────────────────────────
@@ -221,10 +170,6 @@ section "Manual Installs"
 curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
 # starship
 curl -sS https://starship.rs/install.sh | sh -s -- -y
-# uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
-# zoxide
-curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 
 # ──────────────────────────────────────────────────
 info "All done!"

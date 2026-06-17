@@ -1,5 +1,10 @@
 bat
+eza
 fd-find
 fzf
+golang
+helix
 hyperfine
 ripgrep
+uv
+zoxide

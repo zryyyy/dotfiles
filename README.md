@@ -11,8 +11,11 @@ bash <(curl -fsSL https://raw.githubusercontent.com/zryyyy/dotfiles/HEAD/scripts
 # 🐧 Ubuntu
 bash <(curl -fsSL https://raw.githubusercontent.com/zryyyy/dotfiles/HEAD/scripts/ubuntu.sh)
 
+# 🎩 Fedora
+bash <(curl -fsSL https://raw.githubusercontent.com/zryyyy/dotfiles/HEAD/scripts/fedora.sh)
+
 # 🪟 Windows
-powershell -ep Bypass -c "irm 'https://raw.githubusercontent.com/zryyyy/dotfiles/HEAD/scripts/install.ps1' | iex"
+powershell -ep Bypass -c "irm 'https://raw.githubusercontent.com/zryyyy/dotfiles/HEAD/scripts/win.ps1' | iex"
 ```
 
 ## Generate Brewfile
