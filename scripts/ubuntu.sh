@@ -53,6 +53,8 @@ SSH_OUTPUT=$(ssh -T -o StrictHostKeyChecking=accept-new git@github.com 2>&1 || t
 if echo "$SSH_OUTPUT" | grep -q "successfully authenticated"; then
     SSH_AVAILABLE=true
     info "GitHub SSH connection is already configured and working, skipping SSH setup"
+elif grep -qi microsoft /proc/version 2>/dev/null; then
+    info "Running in WSL, skipping SSH setup..."
 else
     warn "GitHub SSH is not yet configured, starting setup..."
 
