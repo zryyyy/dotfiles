@@ -19,6 +19,27 @@ function section($msg) { Write-Host "`n── $msg ──" -ForegroundColor Yell
 function die($msg) { Write-Host "[✗] $msg" -ForegroundColor Red; exit 1 }
 
 # ──────────────────────────────────────────────────
+# Windows Sudo
+# ──────────────────────────────────────────────────
+section "Windows Sudo"
+
+if (Get-Command sudo -ErrorAction SilentlyContinue) {
+    info "Enabling sudo normal mode..."
+    $ErrorActionPreference = "Continue"
+    sudo config --enable normal
+    $sudoExitCode = $LASTEXITCODE
+    $ErrorActionPreference = "Stop"
+
+    if ($sudoExitCode -eq 0) {
+        info "Sudo normal mode enabled"
+    } else {
+        warn "Failed to enable sudo normal mode (Exit Code: $sudoExitCode). Continuing..."
+    }
+} else {
+    warn "Windows sudo is not available on this system, skipping"
+}
+
+# ──────────────────────────────────────────────────
 # Update Winget
 # ──────────────────────────────────────────────────
 section "Winget Update"

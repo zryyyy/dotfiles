@@ -14,7 +14,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/zryyyy/dotfiles/HEAD/scripts
 # 🎩 Fedora
 bash <(curl -fsSL https://raw.githubusercontent.com/zryyyy/dotfiles/HEAD/scripts/fedora.sh)
 
-# 🪟 Windows
+# 🪟 Windows (Administrator)
 powershell -ep Bypass -c "irm 'https://raw.githubusercontent.com/zryyyy/dotfiles/HEAD/scripts/win.ps1' | iex"
 ```
 

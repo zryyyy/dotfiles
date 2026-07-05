@@ -62,7 +62,7 @@ alias bs='brew search'
 alias binf='brew info'
 alias bl='brew list'
 alias blc='brew list --cask'
-alias up='brew update && brew upgrade && brew cleanup'
+alias up='brew update && brew upgrade -y && brew cleanup'
 
 # other
 # Get week number
