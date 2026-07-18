@@ -6,15 +6,21 @@
     autocrlf = input
     eol = lf
     whitespace = blank-at-eol,blank-at-eof,space-before-tab
+    quotePath = false
+    excludesfile = ~/.dotfiles/git/.gitignore
 
 [push]
     autoSetupRemote = true
 
 [pull]
     rebase = true
+    autostash = true
 
 [fetch]
     prune = true
+
+[merge]
+    conflictStyle = zdiff3
 
 [help]
     autocorrect = prompt
@@ -27,4 +33,4 @@
 #     path = ~/.dotfiles/git/.gitconfig-gitlab
 
 [include]
-    path = ~/.gitconfig-local
+    path = ~/.dotfiles/git/.gitconfig-local

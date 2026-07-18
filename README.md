@@ -21,7 +21,7 @@ powershell -ep Bypass -c "irm 'https://raw.githubusercontent.com/zryyyy/dotfiles
 ## Generate Brewfile
 
 ```sh
-brew bundle dump --force --file=./packages/Brewfile
+brew bundle dump --force --no-describe --formula --cask --tap --mas --file=./packages/Brewfile
 ```
 
 ## References

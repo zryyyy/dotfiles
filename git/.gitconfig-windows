@@ -1,5 +1,6 @@
 [core]
     fileMode = false
+    longpaths = true
 
 [credential]
     helper = manager

@@ -46,6 +46,7 @@ alias l='ls -CF'
 # npm
 alias ni='npm install'
 alias nci='npm ci'
+alias nr='npm run'
 alias nrs='npm run start'
 alias nrd='npm run dev'
 alias nrb='npm run build'
